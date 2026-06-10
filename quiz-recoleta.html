@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete sua história ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0A0A0A;--bg-card:#141414;--border:#2a2a2a;
+      --gold:#C9A96E;--wine:#8B2035;--cream:#F5F0EB;--muted:#8a8a8a;--dim:#3a3a3a;
+      --serif:'Cormorant Garamond',Georgia,serif;--sans:'Outfit',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--sans);font-weight:300;background:var(--bg);color:var(--cream);
+         min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+    .overlay{position:fixed;inset:0;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .inner{display:flex;flex-direction:column;align-items:center;padding:40px 18px 80px}
+    .card{width:100%;max-width:540px;animation:fadeUp .4s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    /* PROGRESSO */
+    .prog-bars{display:flex;gap:4px;margin-bottom:20px}
+    .prog-bar{flex:1;height:3px;border-radius:2px;background:#1f1f1f;transition:background .4s}
+    .prog-bar.done{background:var(--wine)}
+    .prog-bar.active{background:var(--gold)}
+    .step-count{font-size:11px;color:var(--dim);text-align:center;margin-bottom:16px;
+                letter-spacing:1px;text-transform:uppercase}
+
+    /* TELAS */
+    .screen{display:none}
+    .screen.active{display:block;animation:fadeUp .4s ease both}
+
+    /* TIPOGRAFIA */
+    .step-title{font-family:var(--serif);font-weight:300;font-size:27px;text-align:center;
+                margin-bottom:4px;line-height:1.2}
+    .step-title em{font-weight:700;font-style:italic;color:var(--gold)}
+    .step-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:20px;line-height:1.5}
+
+    /* CAMPOS */
+    .fld{margin-bottom:14px}
+    .lbl{display:block;font-size:12px;font-weight:500;color:#b8b8b8;letter-spacing:.5px;margin-bottom:5px}
+    .inp,.sel,.txa{width:100%;padding:13px 15px;background:var(--bg-card);border:1px solid var(--border);
+                   border-radius:8px;color:var(--cream);font-family:var(--sans);font-weight:300;
+                   font-size:16px;transition:border-color .3s;outline:none}
+    .inp:focus,.sel:focus,.txa:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,169,110,.1)}
+    .inp::placeholder,.txa::placeholder{color:var(--dim);font-style:italic}
+    .sel{cursor:pointer;appearance:none;
+         background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23C9A96E' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+         background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+    .sel option{background:var(--bg-card);color:var(--cream)}
+    .txa{resize:vertical;min-height:96px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .other-inp{display:none;margin-top:8px}
+    .hint{font-size:11px;color:#4a4a4a;margin-top:4px;font-style:italic}
+
+    /* INTENSIDADE */
+    .int-row{display:flex;gap:10px}
+    .int-card{flex:1;padding:15px 8px;text-align:center;cursor:pointer;background:var(--bg-card);
+              border:1px solid var(--border);border-radius:10px;transition:all .3s}
+    .int-card:hover{border-color:#3a3a3a}
+    .int-card.sel{border-color:var(--gold);background:rgba(201,169,110,.08)}
+    .int-icon{margin-bottom:5px;font-size:18px}
+    .int-name{font-weight:600;font-size:12px;color:var(--cream);margin-bottom:2px}
+    .int-desc{font-size:11px;color:var(--muted)}
+
+    /* NAVEGAÇÃO */
+    .nav{display:flex;gap:10px;margin-top:22px}
+    .btn-back{flex:1;padding:13px;background:transparent;border:1px solid var(--border);
+              border-radius:8px;color:#b8b8b8;font-family:var(--sans);font-size:13px;cursor:pointer;transition:all .2s}
+    .btn-back:hover{border-color:#6B6B6B;color:var(--cream)}
+    .btn-next{flex:2;padding:13px;background:var(--gold);border:none;border-radius:8px;
+              color:#0A0A0A;font-family:var(--sans);font-weight:600;font-size:13px;
+              letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+    .btn-next:hover{background:#D4BA85}
+    .btn-next:disabled{background:var(--border);color:var(--dim);cursor:not-allowed}
+
+    /* INTRO */
+    .intro{text-align:center}
+    .intro-eyebrow{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;
+                   color:var(--wine);margin-bottom:14px}
+    .intro-title{font-family:var(--serif);font-weight:300;font-size:34px;color:var(--cream);
+                 line-height:1.15;margin:0 0 10px}
+    .intro-title em{font-weight:700;font-style:italic;color:var(--gold);display:block}
+    .intro-sub{font-weight:300;font-size:14px;color:var(--muted);line-height:1.65;
+               max-width:420px;margin:0 auto 24px}
+    .intro-cta{display:inline-block;padding:15px 48px;background:var(--wine);color:var(--cream);
+               border:none;border-radius:6px;font-family:var(--sans);font-weight:600;font-size:14px;
+               letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .25s}
+    .intro-cta:hover{background:#A82842;transform:translateY(-2px)}
+    .lock-badge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:18px;
+                padding:10px 16px;background:rgba(201,169,110,.04);
+                border:1px solid rgba(201,169,110,.1);border-radius:8px}
+    .lock-badge span{font-size:12px;color:#6B6B6B}
+
+    /* SUCESSO */
+    .success-card{text-align:center;padding:32px 20px}
+    .success-icon{font-size:56px;margin-bottom:16px}
+    .success-title{font-family:var(--serif);font-weight:300;font-size:30px;margin-bottom:10px}
+    .success-title em{color:var(--gold);font-weight:700;font-style:italic}
+    .success-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto}
+
+    /* ERRO */
+    .erro-msg{color:#f87171;font-size:13px;margin-top:10px;display:none;text-align:center}
+
+    .spin{width:16px;height:16px;border:2px solid rgba(10,10,10,.3);border-top-color:#0A0A0A;
+          border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:480px){
+      .intro-title{font-size:28px}
+      .step-title{font-size:22px}
+      .row2{grid-template-columns:1fr}
+      .int-row{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+<div class="overlay" id="overlay">
+  <div class="inner">
+    <div class="card">
+
+      <!-- PROGRESSO -->
+      <div class="prog-bars" id="progBars" style="display:none">
+        <div class="prog-bar"></div><div class="prog-bar"></div><div class="prog-bar"></div>
+        <div class="prog-bar"></div><div class="prog-bar"></div><div class="prog-bar"></div>
+        <div class="prog-bar"></div><div class="prog-bar"></div><div class="prog-bar"></div>
+        <div class="prog-bar"></div><div class="prog-bar"></div><div class="prog-bar"></div>
+      </div>
+      <div class="step-count" id="stepCount"></div>
+
+      <!-- INTRO -->
+      <div class="screen active" id="sc-intro">
+        <div class="intro">
+          <div class="intro-eyebrow">Dark Romance Personalizado</div>
+          <h1 class="intro-title">Vamos criar<em>a sua história</em></h1>
+          <p class="intro-sub">
+            Seu pedido foi confirmado! Agora é só responder as perguntas abaixo
+            para que possamos escrever seu Dark Romance exclusivo.
+          </p>
+          <button class="intro-cta" onclick="goTo(1)">Começar agora</button>
+          <div class="lock-badge">
+            <svg width="13" height="15" viewBox="0 0 12 14" fill="none">
+              <rect x="1" y="6" width="10" height="7" rx="1.5" stroke="#C9A96E" stroke-width="1.2" fill="rgba(201,169,110,.1)"/>
+              <path d="M3.5 6V4a2.5 2.5 0 0 1 5 0v2" stroke="#C9A96E" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span>Suas respostas são 100% confidenciais</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TELA 1: NOMES -->
+      <div class="screen" id="sc-1">
+        <div class="step-title">Vamos começar pelos <em>nomes</em></div>
+        <div class="step-sub">Você é a heroína. Ele é aquele que não sai da sua cabeça.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Seu Primeiro Nome *</label>
+            <input type="text" class="inp" id="q-your-name" placeholder="Ex: Sarah"></div>
+          <div class="fld"><label class="lbl">O Nome Dele *</label>
+            <input type="text" class="inp" id="q-his-name" placeholder="Ex: Damien"></div>
+        </div>
+        <div class="nav"><button class="btn-next" id="bn-1" disabled onclick="goTo(2)">CONTINUAR</button></div>
+      </div>
+
+      <!-- TELA 2: IDADES -->
+      <div class="screen" id="sc-2">
+        <div class="step-title">Qual a idade de <em>vocês?</em></div>
+        <div class="step-sub">A idade molda a história.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Sua Idade *</label>
+            <input type="number" class="inp" id="q-your-age" placeholder="Ex: 26"></div>
+          <div class="fld"><label class="lbl">Idade Dele *</label>
+            <input type="number" class="inp" id="q-his-age" placeholder="Ex: 32"></div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(1)">Voltar</button>
+          <button class="btn-next" id="bn-2" disabled onclick="goTo(3)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 3: OLHOS -->
+      <div class="screen" id="sc-3">
+        <div class="step-title">Os olhos que <em>te prendem</em></div>
+        <div class="step-sub">A primeira coisa que você nota. A última que você esquece.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Cor dos Seus Olhos *</label>
+            <select class="sel" id="q-your-eyes" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Castanhos</option><option>Azuis</option>
+              <option>Verdes</option><option>Mel / Esverdeados</option><option>Cinzas</option>
+              <option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Digite a cor...">
+          </div>
+          <div class="fld"><label class="lbl">Cor dos Olhos Dele *</label>
+            <select class="sel" id="q-his-eyes" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Castanhos Escuros</option>
+              <option>Azuis</option><option>Verdes</option><option>Pretos</option>
+              <option>Cinzas</option><option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Digite a cor...">
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(2)">Voltar</button>
+          <button class="btn-next" id="bn-3" disabled onclick="goTo(4)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 4: CABELO -->
+      <div class="screen" id="sc-4">
+        <div class="step-title">Agora imagine <em>os cabelos</em></div>
+        <div class="step-sub">O seu caindo pelos ombros. O dele, do tipo que você quer puxar.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Cor do Seu Cabelo *</label>
+            <select class="sel" id="q-your-hair" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Loiro</option>
+              <option>Moreno / Castanho</option><option>Preto</option>
+              <option>Ruivo</option><option>Colorido</option>
+              <option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Digite a cor...">
+          </div>
+          <div class="fld"><label class="lbl">Cor do Cabelo Dele *</label>
+            <select class="sel" id="q-his-hair" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Castanho Escuro</option>
+              <option>Preto</option><option>Loiro</option><option>Castanho Claro</option>
+              <option>Ruivo</option><option>Grisalho</option>
+              <option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Digite a cor...">
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(3)">Voltar</button>
+          <button class="btn-next" id="bn-4" disabled onclick="goTo(5)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 5: FÍSICO -->
+      <div class="screen" id="sc-5">
+        <div class="step-title">Descreva <em>os corpos</em></div>
+        <div class="step-sub">Cada detalhe importa.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Seu Tipo Físico *</label>
+            <select class="sel" id="q-your-build" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Pequena e delicada</option>
+              <option>Magra</option><option>Atlética</option>
+              <option>Com curvas</option><option>Plus-size</option>
+              <option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Descreva seu corpo...">
+          </div>
+          <div class="fld"><label class="lbl">Tipo Físico Dele *</label>
+            <select class="sel" id="q-his-build" onchange="toggleOther(this)">
+              <option value="">Selecione...</option><option>Alto e musculoso</option>
+              <option>Magro e atlético</option><option>Largo e imponente</option>
+              <option>Shape de lutador</option>
+              <option value="__other__">Outro...</option>
+            </select>
+            <input type="text" class="inp other-inp" placeholder="Descreva o corpo dele...">
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(4)">Voltar</button>
+          <button class="btn-next" id="bn-5" disabled onclick="goTo(6)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 6: CENÁRIO -->
+      <div class="screen" id="sc-6">
+        <div class="step-title">Qual enredo <em>mais te excita?</em></div>
+        <div class="step-sub">Qual fantasia faz seu coração bater mais forte?</div>
+        <div class="fld"><label class="lbl">Escolha seu cenário *</label>
+          <select class="sel" id="q-scenario" onchange="toggleOther(this)">
+            <option value="">Selecione...</option>
+            <option>Enemies to Lovers (Inimigos a Amantes)</option>
+            <option>Romance Proibido</option><option>Romance da Máfia</option>
+            <option>Chefe e Funcionária</option>
+            <option>De Desconhecidos a Almas Gêmeas</option>
+            <option>Irmão da Melhor Amiga</option>
+            <option>Guarda-Costas / Protetor</option>
+            <option>Bilionário Possessivo</option>
+            <option>Proximidade Forçada (Apenas uma cama)</option>
+            <option value="__other__">Outro — Tenho minha própria fantasia...</option>
+          </select>
+          <input type="text" class="inp other-inp" placeholder="Descreva sua fantasia...">
+          <div class="hint">Não existe resposta errada. Quanto mais ousado, melhor.</div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(5)">Voltar</button>
+          <button class="btn-next" id="bn-6" disabled onclick="goTo(7)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 7: AMBIENTE -->
+      <div class="screen" id="sc-7">
+        <div class="step-title">Onde tudo <em>começa?</em></div>
+        <div class="step-sub">O lugar define o clima.</div>
+        <div class="fld"><label class="lbl">Escolha o ambiente *</label>
+          <select class="sel" id="q-setting" onchange="toggleOther(this)">
+            <option value="">Selecione...</option>
+            <option>Cobertura luxuosa em Nova York</option>
+            <option>Cidade costeira chuvosa</option>
+            <option>Mansão isolada na Itália</option>
+            <option>Londres chuvosa e nublada</option>
+            <option>Chalé nas montanhas (Nevando)</option>
+            <option>Ilha particular</option>
+            <option>Campus de faculdade à noite</option>
+            <option value="__other__">Outro — Tenho um lugar em mente...</option>
+          </select>
+          <input type="text" class="inp other-inp" placeholder="Descreva o lugar...">
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(6)">Voltar</button>
+          <button class="btn-next" id="bn-7" disabled onclick="goTo(8)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 8: INTENSIDADE -->
+      <div class="screen" id="sc-8">
+        <div class="step-title">Até onde <em>devemos ir?</em></div>
+        <div class="step-sub">Esta é a sua história. Você decide quão profunda a noite será.</div>
+        <div class="fld">
+          <label class="lbl">Nível de Intensidade *</label>
+          <div class="int-row">
+            <div class="int-card" onclick="selIntensity(this,'Slow Burn')">
+              <div class="int-icon">🔥</div>
+              <div class="int-name">Romance Lento</div>
+              <div class="int-desc">Tensão e desejo contínuo</div>
+            </div>
+            <div class="int-card" onclick="selIntensity(this,'Quente')">
+              <div class="int-icon">🔥🔥</div>
+              <div class="int-name">Quente</div>
+              <div class="int-desc">Apaixonado e sensual</div>
+            </div>
+            <div class="int-card" onclick="selIntensity(this,'Explícito')">
+              <div class="int-icon">🌶️🌶️</div>
+              <div class="int-name">Explícito</div>
+              <div class="int-desc">Sem limites ou pudores</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(7)">Voltar</button>
+          <button class="btn-next" id="bn-8" disabled onclick="goTo(9)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 9: TRAÇOS -->
+      <div class="screen" id="sc-9">
+        <div class="step-title">O que o torna <em>irresistível?</em></div>
+        <div class="step-sub">O que faz seus joelhos fraquejarem.</div>
+        <div class="fld">
+          <label class="lbl">O que você mais ama nele? *</label>
+          <textarea class="txa" id="q-traits"
+            placeholder="A voz rouca, o olhar intenso, o ciúme possessivo, o maxilar travado, como ele segura minha cintura..."></textarea>
+          <div class="hint">Seja específica, isso deixará a história muito mais real.</div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(8)">Voltar</button>
+          <button class="btn-next" id="bn-9" disabled onclick="goTo(10)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 10: EXTRAS -->
+      <div class="screen" id="sc-10">
+        <div class="step-title">Os ingredientes <em>secretos</em></div>
+        <div class="step-sub">Os menores detalhes criam as cenas mais inesquecíveis.</div>
+        <div class="fld">
+          <label class="lbl">Algo mais que deseja incluir?</label>
+          <textarea class="txa" id="q-extra"
+            placeholder="Uma piada interna, uma marca de nascença, o cheiro de tabaco e menta, uma música tocando no fundo..."></textarea>
+          <div class="hint">Opcional, mas altamente recomendado.</div>
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(9)">Voltar</button>
+          <button class="btn-next" onclick="goTo(11)">CONTINUAR</button>
+        </div>
+      </div>
+
+      <!-- TELA 11: TAMANHO -->
+      <div class="screen" id="sc-11">
+        <div class="step-title">Qual o <em>tamanho</em> da sua história?</div>
+        <div class="step-sub">Confirme o pacote que você escolheu na compra.</div>
+        <div class="fld">
+          <label class="lbl">Pacote *</label>
+          <select class="sel" id="q-package">
+            <option value="">Selecione...</option>
+            <option value="Conto (30 páginas)">Conto (30 páginas)</option>
+            <option value="Novela (50 páginas)">Novela (50 páginas)</option>
+            <option value="Livro Completo (70+ páginas)">Livro Completo (70+ páginas)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="lbl">Adicionais (marque os que comprou)</label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
+                          background:var(--bg-card);border:1px solid var(--border);
+                          border-radius:8px;padding:12px 14px;font-size:13px;color:var(--muted)">
+              <input type="checkbox" id="addon-express" style="width:16px;height:16px;accent-color:var(--gold)">
+              ⚡ Entrega Expressa VIP (4 horas)
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;
+                          background:var(--bg-card);border:1px solid var(--border);
+                          border-radius:8px;padding:12px 14px;font-size:13px;color:var(--muted)">
+              <input type="checkbox" id="addon-hispov" style="width:16px;height:16px;accent-color:var(--gold)">
+              👁️ Através dos Olhos Dele (POV bônus)
+            </label>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="lbl">Seu e-mail (para confirmar a entrega) *</label>
+          <input type="email" class="inp" id="q-email" placeholder="seuemail@exemplo.com" autocomplete="email">
+        </div>
+        <div class="nav">
+          <button class="btn-back" onclick="goTo(10)">Voltar</button>
+          <button class="btn-next" id="bn-11" disabled onclick="enviar()">ENVIAR MINHAS RESPOSTAS</button>
+        </div>
+        <div class="erro-msg" id="erroEnvio">Erro ao enviar. Tente novamente.</div>
+      </div>
+
+      <!-- TELA SUCESSO -->
+      <div class="screen" id="sc-sucesso">
+        <div class="success-card">
+          <div class="success-icon">✨</div>
+          <div class="success-title">Recebido,<br><em>obrigada!</em></div>
+          <p class="success-sub">
+            Suas respostas chegaram até nós. Seu Dark Romance personalizado
+            será entregue no e-mail <strong id="ok-email" style="color:var(--gold)"></strong>
+            dentro do prazo combinado.<br><br>
+            <em style="color:var(--muted)">Henri está esperando por você.</em>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL_STEPS = 11;
+const N8N_WEBHOOK = 'https://n8n-n8n.afwopj.easypanel.host/webhook/dark-recoleta';
+
+let step = 'intro';
+let intensity = '';
+
+// ── Lê parâmetros da URL (telefone, nome, email pre-preenchidos) ──
+const urlP = new URLSearchParams(window.location.search);
+if(urlP.get('email')) setTimeout(()=>{ const el=document.getElementById('q-email'); if(el) el.value=urlP.get('email'); },100);
+
+function goTo(s){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+  const el = document.getElementById(s==='sucesso'?'sc-sucesso':'sc-'+s);
+  if(el){ el.classList.add('active'); }
+  step = s;
+
+  const pb = document.getElementById('progBars');
+  const sc = document.getElementById('stepCount');
+  if(typeof s==='number' && s>=1 && s<=TOTAL_STEPS){
+    pb.style.display='flex';
+    sc.textContent=`PASSO ${s} DE ${TOTAL_STEPS}`;
+    pb.querySelectorAll('.prog-bar').forEach((b,i)=>{
+      b.classList.remove('active','done');
+      if(i+1===s) b.classList.add('active');
+      else if(i+1<s) b.classList.add('done');
+    });
+  } else { pb.style.display='none'; sc.textContent=''; }
+
+  document.getElementById('overlay').scrollTop=0;
+  validate();
+}
+
+function getVal(id){
+  const el=document.getElementById(id);
+  if(!el) return '';
+  let v=el.value.trim();
+  if(v==='__other__'){ const o=el.parentElement.querySelector('.other-inp'); return o?o.value.trim():''; }
+  return v;
+}
+
+function toggleOther(sel){
+  const o=sel.parentElement.querySelector('.other-inp');
+  if(!o) return;
+  o.style.display=sel.value==='__other__'?'block':'none';
+  if(sel.value!=='__other__') o.value='';
+  validate();
+}
+
+function selIntensity(el,val){
+  intensity=val;
+  document.querySelectorAll('.int-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  validate();
+}
+
+function validate(){
+  const en=(id,ok)=>{ const b=document.getElementById(id); if(b) b.disabled=!ok; };
+  if(step===1)  en('bn-1',  !!(getVal('q-your-name')&&getVal('q-his-name')));
+  if(step===2)  en('bn-2',  !!(getVal('q-your-age')&&getVal('q-his-age')));
+  if(step===3)  en('bn-3',  !!(getVal('q-your-eyes')&&getVal('q-his-eyes')));
+  if(step===4)  en('bn-4',  !!(getVal('q-your-hair')&&getVal('q-his-hair')));
+  if(step===5)  en('bn-5',  !!(getVal('q-your-build')&&getVal('q-his-build')));
+  if(step===6)  en('bn-6',  !!getVal('q-scenario'));
+  if(step===7)  en('bn-7',  !!getVal('q-setting'));
+  if(step===8)  en('bn-8',  !!intensity);
+  if(step===9)  en('bn-9',  !!getVal('q-traits'));
+  if(step===11){
+    const email=document.getElementById('q-email')?.value.trim()||'';
+    const pkg=document.getElementById('q-package')?.value||'';
+    en('bn-11', !!(pkg && email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)));
+  }
+}
+
+document.querySelectorAll('.inp,.sel,.txa').forEach(el=>{
+  el.addEventListener('input',validate);
+  el.addEventListener('change',validate);
+});
+
+async function enviar(){
+  const btn=document.getElementById('bn-11');
+  const err=document.getElementById('erroEnvio');
+  err.style.display='none';
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin"></span> Enviando...';
+
+  const email = document.getElementById('q-email').value.trim();
+
+  const payload = {
+    // identificação (pode vir da URL)
+    telefone:     urlP.get('tel')  || urlP.get('telefone') || '',
+    pagamento_id: urlP.get('pid')  || urlP.get('pagamento_id') || '',
+    nome:         getVal('q-your-name'),
+    email,
+    // dados do quiz
+    quiz: {
+      customer_name:  getVal('q-your-name'),
+      customer_age:   getVal('q-your-age'),
+      customer_eyes:  getVal('q-your-eyes'),
+      customer_hair:  getVal('q-your-hair'),
+      customer_build: getVal('q-your-build'),
+      hero_name:      getVal('q-his-name'),
+      hero_age:       getVal('q-his-age'),
+      hero_eyes:      getVal('q-his-eyes'),
+      hero_hair:      getVal('q-his-hair'),
+      hero_build:     getVal('q-his-build'),
+      scenario:       getVal('q-scenario'),
+      setting:        getVal('q-setting'),
+      intensity,
+      what_she_loves: getVal('q-traits'),
+      extra_details:  getVal('q-extra') || 'Nenhum',
+      package_length: document.getElementById('q-package').value,
+      addon_express:  document.getElementById('addon-express').checked ? 'Sim' : 'Não',
+      addon_hispov:   document.getElementById('addon-hispov').checked  ? 'Sim' : 'Não',
+    }
+  };
+
+  try {
+    await fetch(N8N_WEBHOOK, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    // Guarda o email no sucesso
+    document.getElementById('ok-email').textContent = email;
+    // Troca o nome do herói na tela de sucesso se preenchido
+    const heroNome = getVal('q-his-name');
+    if(heroNome){
+      const em = document.querySelector('#sc-sucesso em');
+      if(em) em.textContent = heroNome + ' está esperando por você.';
+    }
+    goTo('sucesso');
+  } catch(e) {
+    err.style.display='block';
+    err.textContent='Erro ao enviar suas respostas. Tente novamente.';
+    btn.disabled=false;
+    btn.textContent='ENVIAR MINHAS RESPOSTAS';
+  }
+}
+</script>
+</body>
+</html>
