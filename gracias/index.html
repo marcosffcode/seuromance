@@ -4,88 +4,172 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
   <title>¡Tu historia está en camino! ✨</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-
-  <!-- Meta Pixel MX -->
-  <script>
-  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-  document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init','1004508792203159');
-  // PageView removido: esta página é continuação da sessão do checkout Hotmart.
-  </script>
-
   <style>
-    :root{
-      --bg:#0A0A0A;--bg-card:#141414;--border:#2a2a2a;
-      --gold:#C9A96E;--wine:#8B2035;--cream:#F5F0EB;--muted:#8a8a8a;
-      --serif:'Cormorant Garamond',Georgia,serif;--sans:'Outfit',sans-serif;
+    :root {
+      --bg: #0A0A0A;
+      --bg-card: #141414;
+      --border: #2a2a2a;
+      --gold: #C9A96E;
+      --green: #22c55e;
+      --green-bg: rgba(21,128,61,.1);
+      --cream: #F5F0EB;
+      --muted: #8a8a8a;
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:var(--sans);font-weight:300;background:var(--bg);color:var(--cream);
-         min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 60px}
 
-    .topo{width:100%;background:#15803d;padding:13px 16px;display:flex;align-items:center;
-          justify-content:center;gap:8px;margin-bottom:28px}
-    .topo span{font-size:13px;font-weight:600;color:#fff;letter-spacing:.3px}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .page{width:100%;max-width:500px}
+    body {
+      font-family: var(--sans);
+      font-weight: 300;
+      background: var(--bg);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 60px;
+    }
 
-    .card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
-          padding:28px 22px;margin-bottom:12px;text-align:center}
+    /* ── Topo ── */
+    .topo {
+      width: 100%;
+      background: #15803d;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .topo span { font-size: 13px; font-weight: 600; color: #fff; letter-spacing: .3px; }
 
-    .check-circle{width:72px;height:72px;border-radius:50%;background:rgba(21,128,61,.1);
-      border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;
-      margin:0 auto 20px;animation:pop .45s cubic-bezier(.17,.67,.3,1.3) both}
-    @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-    .check-circle svg{stroke-dasharray:30;stroke-dashoffset:30;
-      animation:draw .35s .45s ease forwards}
-    @keyframes draw{to{stroke-dashoffset:0}}
+    /* ── Layout ── */
+    .page { width: 100%; max-width: 500px; }
 
-    h1{font-family:var(--serif);font-weight:300;font-size:30px;line-height:1.2;margin-bottom:8px}
-    h1 em{color:var(--gold);font-weight:700;font-style:italic}
-    .sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-    .email-destaque{color:var(--gold);font-weight:500}
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 22px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
 
-    .book-mini{width:120px;height:170px;background:linear-gradient(135deg,#1a0a0e 0%,#2d0f18 40%,#1a0a0e 100%);
-      border-radius:3px 8px 8px 3px;box-shadow:5px 3px 14px rgba(0,0,0,.6);
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:14px;margin:0 auto 20px;position:relative;overflow:hidden}
-    .book-mini::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
-      background:linear-gradient(180deg,var(--gold),#8B6914,var(--gold))}
-    .book-mini-label{font-size:6px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:8px}
-    .book-mini-title{font-family:var(--serif);font-weight:700;font-style:italic;font-size:18px;
-      color:var(--cream);text-align:center;line-height:1.2;margin-bottom:5px}
-    .book-mini-amp{font-family:var(--serif);font-size:14px;color:var(--gold);font-style:italic;margin-bottom:3px}
-    .book-mini-sub{font-size:7px;letter-spacing:2px;text-transform:uppercase;
-      color:rgba(201,169,110,.5);text-align:center;margin-top:8px}
+    /* ── Check circle ── */
+    .check-circle {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--green-bg);
+      border: 2px solid var(--green);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      animation: pop .45s cubic-bezier(.17,.67,.3,1.3) both;
+    }
+    @keyframes pop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .check-circle svg {
+      stroke-dasharray: 30;
+      stroke-dashoffset: 30;
+      animation: draw .35s .45s ease forwards;
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
 
-    .steps-title{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);
-      margin-bottom:14px;font-weight:500}
-    .step-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;text-align:left}
-    .step-num{width:28px;height:28px;border-radius:50%;background:rgba(201,169,110,.1);
-      border:1px solid rgba(201,169,110,.3);display:flex;align-items:center;justify-content:center;
-      font-size:12px;font-weight:600;color:var(--gold);flex-shrink:0;margin-top:1px}
-    .step-info strong{display:block;font-size:13px;font-weight:500;color:var(--cream);margin-bottom:3px}
-    .step-info span{font-size:12px;color:var(--muted);line-height:1.5}
+    /* ── Hero text ── */
+    h1 {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-size: 30px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    h1 em { color: var(--gold); font-weight: 700; font-style: italic; }
 
-    .guarantee{background:var(--bg-card);border:1px solid rgba(201,169,110,.15);border-radius:10px;
-      padding:14px 18px;text-align:center}
-    .guarantee-hl{font-weight:600;font-size:13px;color:var(--gold);margin-bottom:5px}
-    .guarantee-sub{font-size:12px;color:#6B6B6B;line-height:1.6}
+    .sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .destaque { color: var(--gold); font-weight: 500; }
 
-    .suporte{margin-top:24px;font-size:12px;color:#4a4a4a;text-align:center;line-height:1.7}
-    .suporte a{color:var(--gold);text-decoration:none}
+    /* ── Book mini ── */
+    .book-mini {
+      width: 120px; height: 170px;
+      background: linear-gradient(135deg, #1a0a0e 0%, #2d0f18 40%, #1a0a0e 100%);
+      border-radius: 3px 8px 8px 3px;
+      box-shadow: 5px 3px 14px rgba(0,0,0,.6);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 14px;
+      margin: 0 auto 20px;
+      position: relative; overflow: hidden;
+    }
+    .book-mini::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--gold), #8B6914, var(--gold));
+    }
+    .book-mini-label {
+      font-size: 6px; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold); opacity: .7; margin-bottom: 8px;
+    }
+    .book-mini-title {
+      font-family: var(--serif);
+      font-weight: 700; font-style: italic; font-size: 18px;
+      color: var(--cream); text-align: center; line-height: 1.2; margin-bottom: 5px;
+    }
+    .book-mini-amp { font-family: var(--serif); font-size: 14px; color: var(--gold); font-style: italic; margin-bottom: 3px; }
+    .book-mini-sub {
+      font-size: 7px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(201,169,110,.5); text-align: center; margin-top: 8px;
+    }
+
+    /* ── Steps ── */
+    .steps-title {
+      font-size: 12px; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px; font-weight: 500;
+    }
+    .step-item {
+      display: flex; align-items: flex-start;
+      gap: 12px; margin-bottom: 14px; text-align: left;
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(201,169,110,.1);
+      border: 1px solid rgba(201,169,110,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; color: var(--gold);
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-info strong { display: block; font-size: 13px; font-weight: 500; color: var(--cream); margin-bottom: 3px; }
+    .step-info span   { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Guarantee ── */
+    .guarantee {
+      background: var(--bg-card);
+      border: 1px solid rgba(201,169,110,.15);
+      border-radius: 10px;
+      padding: 14px 18px; text-align: center;
+    }
+    .guarantee-hl  { font-weight: 600; font-size: 13px; color: var(--gold); margin-bottom: 5px; }
+    .guarantee-sub { font-size: 12px; color: #6B6B6B; line-height: 1.6; }
+
+    /* ── Footer ── */
+    .suporte { margin-top: 24px; font-size: 12px; color: #4a4a4a; text-align: center; line-height: 1.7; }
+    .suporte a { color: var(--gold); text-decoration: none; }
   </style>
 </head>
 <body>
 
   <div class="topo">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
     <span>¡Pago confirmado con éxito!</span>
   </div>
 
@@ -93,15 +177,17 @@
 
     <div class="card">
       <div class="check-circle">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
       </div>
 
       <h1>Tu historia está<br><em>en camino</em></h1>
       <p class="sub">
         ¡Gracias por confiar en nosotros,
-        <strong id="nomeCliente" class="email-destaque"></strong>!<br>
-        Tu Dark Romance personalizado será entregado en<br>
-        <span class="email-destaque" id="emailDestino"></span>
+        <strong id="nomeCliente" class="destaque"></strong>!<br>
+        Tu Dark Romance personalizado será entregado en tu correo electrónico<br>
+        
       </p>
 
       <div class="book-mini">
@@ -154,17 +240,15 @@
   </div>
 
   <script>
-    const p = new URLSearchParams(window.location.search);
-    const email = p.get('email') || '';
-    const nome  = p.get('nome')  || '';
+    var p = new URLSearchParams(window.location.search);
+    var email = p.get('email') || '';
+    var nome  = p.get('nome')  || '';
 
     if (email) document.getElementById('emailDestino').textContent = email;
     if (nome)  document.getElementById('nomeCliente').textContent  = nome + ',';
 
     if (p.get('express') === '1') document.getElementById('prazo').textContent = '24 horas';
-
-    // Purchase NÃO é disparado aqui.
-    // A Hotmart confirma o pagamento e o webhook N8N (/dark-mexico) dispara a CAPI.
   </script>
+
 </body>
 </html>
